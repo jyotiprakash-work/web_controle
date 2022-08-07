@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+function left_click() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/left_click");
+  xhttp.send();
+}
+
+function right_click() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/right_click");
+  xhttp.send();
+}
+
+function mouse_move(data) {
+  let post = JSON.stringify(data)
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/mouse_move",true);
+  xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
+  xhttp.send(post);
+  xhttp.onload = function () {
+    if(xhttp.status === 201) {
+        console.log("Post successfully created!") 
+    }
+	}
+}
+</script>
+
+</head>
+<body>
+<canvas id="myCanvas" width="200" height="100"
+style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+
+<script>
+var canvas = document.getElementById("myCanvas");
+canvas.width  = window.innerWidth;
+canvas.height = 600;
+var context = canvas.getContext('2d');
+
+context.font= '16px Arial';
+context.textBaseline = 'middle';
+context.fillStyle = '#000000';
+
+canvas.addEventListener('mouseout', function(e) {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+canvas.addEventListener('mousemove', function(e) {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.beginPath();
+  context.arc(e.layerX, e.layerY, 3, 0, 2 * Math.PI, false);
+  context.closePath();
+  context.fill();
+  var text = '(' + e.layerX + ', ' + e.layerY + ')';
+  context.fillText(text, e.layerX + 5, e.layerY);
+  mouse_move({'x':e.layerX,'y':e.layerY})
+});
+</script>
+
+<h1>The button Element</h1>
+
+<button type="button" onclick="left_click()">Left</button>
+<button type="button" onclick="right_click()">Right</button>
+ 
+</body>
+</html>

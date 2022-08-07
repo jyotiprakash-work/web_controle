@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.div {
+  position: absolute;
+  z-index: 9;
+  background-color: #f1f1f1;
+  text-align: center;
+  border: 1px solid #d3d3d3;
+  height: {{config['hight']}};
+  width: {{config['width']}};
+  overflow: scroll;
+}
+</style>
+<script>
+function left_click() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/left_click");
+  xhttp.send();
+}
+
+function right_click() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "/right_click");
+  xhttp.send();
+}
+
+function mouse_move(data) {
+  let post = JSON.stringify(data)
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/mouse_move",true);
+  xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
+  xhttp.send(post);
+  xhttp.onload = function () {
+    if(xhttp.status === 201) {
+        console.log("Post successfully created!") 
+    }
+	}
+}
+</script>
+
+</head>
+<body >
+
+<div style="border:1px solid #c3c3c3;" ontouchmove="myFunction(event)"><br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+</div>
+
+<script>
+var x = 0;
+var y = 0;
+function myFunction(event) {
+  x = event.touches[0].clientX;
+  y = event.touches[0].clientY;
+  //document.getElementById("demo").innerHTML = x + ", " + y;
+  mouse_move({'x':x,'y':y})
+}
+</script>
+
+
+
+<h1>The button Element</h1>
+
+<button type="button" onclick="left_click()">Left</button>
+<button type="button" onclick="right_click()">Right</button>
+ 
+</body>
+</html>
